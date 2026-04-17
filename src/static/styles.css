@@ -187,7 +187,8 @@ section h3 {
   margin-top: auto;
   padding-top: 10px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 /* Activity Tag */
@@ -466,6 +467,42 @@ button {
   border: 1px dashed var(--border);
   margin: 10px 0;
   font-size: 0.85rem;
+}
+
+/* Share button */
+.share-button {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  justify-content: center;
+}
+
+.share-button:hover {
+  background-color: var(--background);
+  border-color: var(--primary-light);
+  color: var(--primary);
+}
+
+/* Highlight a card when navigated to via a shared link */
+.highlighted-activity {
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 3px rgba(255, 111, 0, 0.25);
+  animation: highlight-fade 3s ease forwards;
+}
+
+@keyframes highlight-fade {
+  0% { box-shadow: 0 0 0 4px rgba(255, 111, 0, 0.4); }
+  100% { box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); border-color: var(--border); }
 }
 
 footer {

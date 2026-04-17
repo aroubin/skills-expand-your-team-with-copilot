@@ -568,6 +568,9 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `
         }
+        <button class="share-button" data-activity="${name}" aria-label="Share this activity" title="Share this activity">
+          📤 Share
+        </button>
       </div>
     `;
 
@@ -587,7 +590,63 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    // Add click handler for share button
+    const shareButton = activityCard.querySelector(".share-button");
+    shareButton.addEventListener("click", () => {
+      shareActivity(name, details);
+    });
+
+    // Highlight this card if it matches the URL hash
+    const hash = decodeURIComponent(window.location.hash.slice(1));
+    if (hash && hash === name) {
+      activityCard.id = "shared-activity";
+      activityCard.classList.add("highlighted-activity");
+      setTimeout(() => {
+        activityCard.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300);
+    }
+
     activitiesList.appendChild(activityCard);
+  }
+
+  // Share an activity using the Web Share API or clipboard fallback
+  function shareActivity(name, details) {
+    const url =
+      window.location.origin +
+      window.location.pathname +
+      "#" +
+      encodeURIComponent(name);
+    const formattedSchedule = formatSchedule(details);
+    const shareText = `Check out this activity at Mergington High School!\n\n📌 ${name}\n${details.description}\n🗓️ ${formattedSchedule}`;
+
+    if (navigator.share) {
+      navigator
+        .share({
+          title: `${name} – Mergington High School`,
+          text: shareText,
+          url: url,
+        })
+        .catch((err) => {
+          // User cancelled or share failed – fall back silently
+          if (err.name !== "AbortError") {
+            copyToClipboard(url);
+          }
+        });
+    } else {
+      copyToClipboard(url);
+    }
+  }
+
+  // Copy text to clipboard and show confirmation
+  function copyToClipboard(text) {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        showMessage("Link copied to clipboard! You can now share it.", "success");
+      })
+      .catch(() => {
+        showMessage("Could not copy link automatically. Please copy the web address from the top of your browser.", "info");
+      });
   }
 
   // Event listeners for search and filter
